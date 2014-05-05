@@ -3,9 +3,9 @@ node-Rstats
 
 An interface for node.js to statistical programming language R based on the fabulous Rcpp package
 
-### Installation
+## Installation
 
-### Getting Started
+## Getting Started
 
 Once the package is loaded, we can create an R session by the command 
 
@@ -19,10 +19,20 @@ Evaluating R expressions is easy. If we do not expect a return object, we can us
 R.parseEvalQ("cat('\n Hello World \n')");
 ```
 
-### Important Functions
+###Important Functions
 
-## assign
+### assign
 
-## parseEvalQ
+Numeric values can be easily assigned to variables in the current R session:
 
-## parseEval
+```javascript
+R.assign('x', 17)
+R.assign('y',3)
+
+// calculate the sum of x+y
+R.parseEvalQ("res = x + y; print(res);")
+```
+
+### parseEvalQ
+
+### parseEval
