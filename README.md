@@ -22,6 +22,8 @@ Evaluating R expressions is easy. We can use the *parseEvalQ* function as follow
 R.parseEvalQ("cat('\n Hello World \n')");
 ```
 
+If 
+
 ### assign
 
 Numeric values can be easily assigned to variables in the current R session:
@@ -44,3 +46,12 @@ var mat = R.get('mat')
 ```
 
 Internally, the *get* function uses JSON in order to convert the R data types to JavaScript data types.
+
+We can also run much more complicated calculations and expose the R objects to JavaScript. Consider a linear regression example:
+
+```javascript
+R.parseEvalQ('x = rnorm(100); y = 4x + rnorm(100); lm_fit = lm(y~x); 
+var lm_fit = R.get('lm_fit')
+var coefs = lm_fit.coefficients
+var residuals = lm_fit.residuals
+```
