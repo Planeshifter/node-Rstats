@@ -40,5 +40,7 @@ To retrieve an object from the R session, we use the *get* command. For example,
 
 ```javascript
 R.parseEvalQ("mat = matrix(1:4,ncol=2,nrow=2)")
-R.get('mat')
+var mat = R.get('mat')
 ```
+
+Internally, the *get* function uses JSON in order to convert the R data types to JavaScript data types.
