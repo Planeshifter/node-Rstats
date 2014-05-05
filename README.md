@@ -7,4 +7,10 @@ An interface for node.js to statistical programming language R based on the fabu
 
 ### Getting Started
 
+Once the package is loaded, we can create an R session simply by 
+
+```javascript
+var R  = new Rstats.session(); // 'world'
+```
+
 ### Important Functions
