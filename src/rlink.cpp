@@ -5,6 +5,7 @@
 #include <algorithm> 
 
 #include "rlink.h"
+#include "helper.h"
 
 using namespace v8;
 using namespace std;
@@ -34,13 +35,15 @@ void RWrap::Initialize(Handle<Object> target) {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("parseEvalQ"),
     FunctionTemplate::New(parseEvalQ)->GetFunction());
     
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("parseEval"),
-    FunctionTemplate::New(parseEval)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("parseEvalQNT"),
+    FunctionTemplate::New(parseEvalQNT)->GetFunction());
     
   tpl->PrototypeTemplate()->Set(String::NewSymbol("assign"),
     FunctionTemplate::New(assign)->GetFunction());
-      
-  
+    
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("get"),
+    FunctionTemplate::New(get)->GetFunction());
+        
   // Prototype
   
   constructor = Persistent<Function>::New(tpl->GetFunction());
@@ -71,7 +74,7 @@ Handle<Value> RWrap::parseEvalQ(const Arguments& args) {
   return scope.Close(Undefined());
 }
 
-Handle<Value> RWrap::parseEval(const Arguments& args) {
+Handle<Value> RWrap::parseEvalQNT(const Arguments& args) {
   HandleScope scope;
 
   RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
@@ -79,6 +82,8 @@ Handle<Value> RWrap::parseEval(const Arguments& args) {
   
   v8::String::Utf8Value param(args[0]->ToString());
   std::string command = std::string(*param);
+  
+   q->parseEvalQNT(command);
   
   return scope.Close(Undefined());
 }
@@ -115,5 +120,50 @@ Handle<Value> RWrap::assign(const Arguments& args) {
       }
     q->assign(num_vec, name);
     }
+  else if (args[1]->IsObject()) 
+    {
+    Handle<Object> object = Handle<Object>::Cast(args[1]); 
+    
+    Handle<Object> global = Context::GetCurrent()->Global();
+    Handle<Object> JSON = Handle<Object>::Cast(global->Get(String::New("JSON")));
+    Handle<Function> stringify = Handle<Function>::Cast(
+    JSON->Get(String::New("stringify")));
+    
+    Handle<Value> stringifyable[] = { object };
+    Handle<String> result = Handle<String>::Cast(stringify->Call(JSON, 1, stringifyable));
+    v8::String::Utf8Value value(result);
+    std::string value_str = std::string(*value);
+    q->assign(value_str, "JSON_container");
+    
+    std::string command_pt1 = "require(RJSONIO,quietly=TRUE);";
+    std::string command_pt2 = " = fromJSON(JSON_container); rm(JSON_container);";
+    std::string full_command = command_pt1 + name + command_pt2; 
+    q->parseEvalQ(full_command);
+    
+    }
   return scope.Close(Undefined());
+}
+
+Handle<Value> RWrap::get(const Arguments& args) {
+  HandleScope scope;
+
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
+  RInside* q = r->GetWrapped();
+  
+  v8::String::Utf8Value param(args[0]->ToString());
+  std::string name = std::string(*param);
+  std::string command_pt1 = "toJSON(";
+  std::string command_pt2 = ");";
+  std::string full_command = command_pt1 + name + command_pt2;
+  
+  Handle<Object> global = Context::GetCurrent()->Global();
+  Handle<Object> JSON = Handle<Object>::Cast(global->Get(String::New("JSON")));
+  Handle<Function> parse = Handle<Function>::Cast(
+  JSON->Get(String::New("parse")));
+  
+  std::string ret = q->parseEval(full_command);
+  Handle<Value> ret_V8 = String::New( ret.c_str() );
+  Handle<Value> result = Handle<String>::Cast(parse->Call(JSON, 1, &ret_V8));
+  
+  return scope.Close(result);
 }

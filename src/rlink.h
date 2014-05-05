@@ -27,9 +27,10 @@ class RWrap : public node::ObjectWrap {
 
   // Wrapped methods
   static v8::Handle<v8::Value> parseEvalQ(const v8::Arguments& args);
-  static v8::Handle<v8::Value> parseEval(const v8::Arguments& args);
+  static v8::Handle<v8::Value> parseEvalQNT(const v8::Arguments& args);
   static v8::Handle<v8::Value> assign(const v8::Arguments& args);
-  
+  static v8::Handle<v8::Value> get(const v8::Arguments& args);
+    
   // Wrapped object
      RInside* q_;
 };

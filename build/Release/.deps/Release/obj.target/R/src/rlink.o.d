@@ -373,7 +373,8 @@ Release/obj.target/R/src/rlink.o: ../src/rlink.cpp \
  /usr/share/R/include/Rembedded.h /usr/share/R/include/Rinterface.h \
  /usr/share/R/include/R_ext/RStartup.h \
  /usr/local/lib/R/site-library/RInside/include/MemBuf.h \
- /usr/local/lib/R/site-library/RInside/include/Callbacks.h
+ /usr/local/lib/R/site-library/RInside/include/Callbacks.h \
+ ../src/helper.h
 ../src/rlink.cpp:
 /home/philipp/.node-gyp/0.10.25/src/node.h:
 /home/philipp/.node-gyp/0.10.25/deps/uv/include/uv.h:
@@ -758,3 +759,4 @@ Release/obj.target/R/src/rlink.o: ../src/rlink.cpp \
 /usr/share/R/include/R_ext/RStartup.h:
 /usr/local/lib/R/site-library/RInside/include/MemBuf.h:
 /usr/local/lib/R/site-library/RInside/include/Callbacks.h:
+../src/helper.h:
