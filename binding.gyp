@@ -19,10 +19,7 @@
     '/<(RINSIDEINCL)',
     '/<(RCPPINCL)',
     '/<(RCPPFLAGS)',
-	],
-    'conditions': [
-      ['OS=="linux"', {
-          'link_settings': 
+	], 'link_settings': 
             {
               'ldflags': ['<(RLDFLAGS)'],
               'libraries': ['<(RLDFLAGS)',
@@ -32,8 +29,6 @@
                             '<(RLAPACK)',
                             ]
             },
-      }],
-    ],
 'cflags_cc!': ['-fno-rtti','-fno-exceptions'],
 'cflags_cc+': ['-frtti','-fno-exceptions']
 }
