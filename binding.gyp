@@ -5,25 +5,32 @@
       "sources": [ "src/rl.cpp",
                    "src/rlink.cpp"],
       "variables": {
-      'R_HOME%' : '/usr/lib/R',
-      'RCPPFLAGS%' : '-I/usr/share/R/include',
-      'RLDFLAGS%' : '-L/usr/lib/R/lib -lR',
-      'RBLAS%' : '-lblas',
-      'RLAPACK%' : '-llapack',
+      'R_HOME%' : '<!(R RHOME)',
+      'RCPPFLAGS%' : '<!(<(R_HOME%)/bin/R CMD config --cppflags | sed "s/^...//")',
+      'RLDFLAGS%' : '<!(<(R_HOME%)/bin/R CMD config --ldflags)',
+      'RBLAS%' : '<!(<(R_HOME%)/bin/R CMD config BLAS_LIBS)',
+      'RLAPACK%' : '<!(<(R_HOME%)/bin/R CMD config LAPACK_LIBS)',
+      'RINSIDEINCL%' : '<!(echo "RInside:::CxxFlags()" | <(R_HOME%)/bin/R --vanilla --slave | sed "s/^...//")',
+      'RINSIDELIBS%' : '<!(echo "RInside:::LdFlags()" | <(R_HOME%)/bin/R --vanilla --slave)',
+      'RCPPINCL%' : '<!(echo "Rcpp:::CxxFlags()" | <(R_HOME%)/bin/R --vanilla --slave | sed "s/^...//")',
+      'RCPPLIBS%' : '<!(echo "Rcpp:::LdFlags()" | <(R_HOME%)/bin/R --vanilla --slave)',
       },
       "include_dirs": [
-    '/usr/local/lib/R/site-library/RInside/include',
-    '/usr/local/lib/R/site-library/Rcpp/include',
-    '/usr/share/R/include',
+    '/<(RINSIDEINCL)',
+    '/<(RCPPINCL)',
+    '/<(RCPPFLAGS)',
 	],
     'conditions': [
       ['OS=="linux"', {
           'link_settings': 
             {
               'ldflags': ['<(RLDFLAGS)'],
-              'libraries': ['-L<(R_HOME)/lib -lR',
-'-L/home/philipp/R/RInside/lib -lRInside -Wl,-rpath,/home/philipp/R/RInside/lib'
-               ]
+              'libraries': ['<(RLDFLAGS)',
+                            '<(RINSIDELIBS)',
+                            '<(RCPPLIBS)',
+                            '<(RBLAS)',
+                            '<(RLAPACK)',
+                            ]
             },
       }],
     ],

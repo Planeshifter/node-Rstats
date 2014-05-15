@@ -110,7 +110,10 @@ LDFLAGS_Release := \
 
 LIBS := \
 	-L/usr/lib/R/lib -lR \
-	-L/home/philipp/R/RInside/lib -lRInside -Wl,-rpath,/home/philipp/R/RInside/lib
+	-L/usr/local/lib/R/site-library/RInside/lib -lRInside -Wl,-rpath,/usr/local/lib/R/site-library/RInside/lib \
+	 \
+	-lblas \
+	-llapack
 
 $(obj).target/R.node: GYP_LDFLAGS := $(LDFLAGS_$(BUILDTYPE))
 $(obj).target/R.node: LIBS := $(LIBS)

@@ -1,0 +1,26 @@
+{
+  "name": "Rstats",
+  "version": "0.0.1",
+  "description": "A node.js interface for statistical programming language R",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "node-gyp configure build && nodeunit test",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Planeshifter/node-Rstats.git"
+  },
+  "keywords": [
+    "statistics",
+    "R",
+    "Rcpp"
+  ],
+  "author": "Philipp Burckhardt",
+  "license": "ISC",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/Planeshifter/node-Rstats/issues"
+  },
+  "homepage": "https://github.com/Planeshifter/node-Rstats"
+}
