@@ -5,7 +5,7 @@ An interface for node.js to statistical programming language R based on the fabu
 
 ## Installation
 
-It is required that the packages *RInside*, *Rcpp* and *RJSONIO* are installed in R. Then, one can simply install rstats using npm 
+It is required that the packages `RInside`, `Rcpp` and `RJSONIO` are installed in R. Then, one can simply install rstats using npm 
 
 ```javascript
 npm install rstats
