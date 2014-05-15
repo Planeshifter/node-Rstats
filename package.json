@@ -7,6 +7,9 @@
     "test": "node-gyp configure build && nodeunit test",
     "install": "node-gyp rebuild"
   },
+  "dependencies": {
+    "bindings": "1.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Planeshifter/node-Rstats.git"

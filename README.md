@@ -5,12 +5,24 @@ An interface for node.js to statistical programming language R based on the fabu
 
 ## Installation
 
+It is required that the packages *RInside*, *Rcpp* and *RJSONIO* are installed in R. Then, one can simply install rstats using npm 
+
+```javascript
+npm install rstats
+```
+
 ## Getting Started
+
+After installation, the package can be loaded as follows:
+
+```javascript
+var rstats  = require('rstats');
+```
 
 Once the package is loaded, we can create an R session by the command 
 
 ```javascript
-var R  = new Rstats.session(); 
+var R  = new rstats.session(); 
 ```
 ## Important Functions
 
@@ -22,7 +34,7 @@ Evaluating R expressions is easy. We can use the *parseEvalQ* function as follow
 R.parseEvalQ("cat('\n Hello World \n')");
 ```
 
-If 
+
 
 ### assign
 
