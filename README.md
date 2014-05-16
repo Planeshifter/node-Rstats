@@ -1,3 +1,5 @@
+[![NPM version](https://badge.fury.io/js/rstats.svg)](http://badge.fury.io/js/rstats)
+
 node-Rstats
 ===========
 
