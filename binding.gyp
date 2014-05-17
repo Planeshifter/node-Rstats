@@ -4,25 +4,7 @@
       "target_name": "R",
       "sources": [ "src/rl.cpp",
                    "src/rlink.cpp"],
-      'conditions': [
-        ['OS=="win"',{
-          "variables": {
-              'R_HOME%' : '<!(R RHOME | sed -e "s|\\\\|\/|g)',
-              'R_ARCH%' : '<!(Rscript -e "cat(.Platform$r_arch)")',
-              'RCPPFLAGS%' : '<!(<(R_HOME%)/bin/R <(R_ARCH%) CMD config --cppflags)',
-              'RLDFLAGS%'  : '<!(<(R_HOME%)/bin/R <(R_ARCH%) CMD config --ldflags)',
-              'RBLAS%'     : '<!(<(R_HOME%)/bin/R <(R_ARCH%) CMD config BLAS_LIBS)',
-              'RLAPACK%'   : '<!(<(R_HOME%)/bin/R <(R_ARCH%) CMD config LAPACK_LIBS)',
-              'RCPPINCL%'  : '<!(<(R_HOME%)/bin/<(R_ARCH%)/Rscript -e "Rcpp:::CxxFlags()")',
-              'RCPPLIBS%'  : '<!(<(R_HOME%)/bin/<(R_ARCH%)/Rscript -e "Rcpp:::LdFlags()")',
-              'RINSIDEINCL%' : '<!(<(R_HOME%)/bin/<(R_ARCH%)/Rscript -e "RInside:::CxxFlags()")',
-              'RINSIDELIBS%' : '<!(<(R_HOME%)/bin/<(R_ARCH%)/Rscript -e "RInside:::LdFlags()")',
-          }
-        }],
-        ['OS=="mac"',{
-        }],
-        ['OS=="linux"',{
-          "variables": {
+      "variables": {
               'R_HOME%' : '<!(R RHOME)',
               'RCPPFLAGS%' : '<!(<(R_HOME%)/bin/R CMD config --cppflags | sed "s/^...//")',
               'RLDFLAGS%' : '<!(<(R_HOME%)/bin/R CMD config --ldflags)',
@@ -33,10 +15,7 @@
               'RCPPINCL%' : '<!(echo "Rcpp:::CxxFlags()" | <(R_HOME%)/bin/R --vanilla --slave | sed "s/^...//")',
               'RCPPLIBS%' : '<!(echo "Rcpp:::LdFlags()" | <(R_HOME%)/bin/R --vanilla --slave)',
               },
-
-        }]
-      ],
-          'link_settings': 
+      "link_settings": 
             {
               'ldflags': ['<(RLDFLAGS)'],
               'libraries': ['<(RLDFLAGS)',
