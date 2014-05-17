@@ -15,7 +15,7 @@ Also, it is required that the R packages `RInside`, `Rcpp` and `RJSONIO` are ins
   * `make`
   * A C/C++ compiler toolchain, such as GCC
 
-Then, one can simply install `rstats` using npm 
+With these prerequisites satisfied, one can simply install `rstats` using npm 
 
 ```bash
 npm install rstats
