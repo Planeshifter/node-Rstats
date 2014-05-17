@@ -7,11 +7,17 @@ An interface for node.js to statistical programming language R based on the fabu
 
 ## Installation
 
-Currently, `rstats` is ONLY supported for Linux operating systems. 
+Currently, `rstats` is ONLY supported for Unix operating systems. 
 
-Also, it is required that the R packages `RInside`, `Rcpp` and `RJSONIO` are installed inside R. Then, one can simply install `rstats` using npm 
+Also, it is required that the R packages `RInside`, `Rcpp` and `RJSONIO` are installed inside R. Additionally, building the package using `node-gyp` requires
 
-```javascript
+  * `python` (`v2.7`, `v3.x.x` is __*not*__ supported)
+  * `make`
+  * A C/C++ compiler toolchain, such as GCC
+
+Then, one can simply install `rstats` using npm 
+
+```bash
 npm install rstats
 ```
 
