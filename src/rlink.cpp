@@ -107,20 +107,7 @@ Handle<Value> RWrap::assign(const Arguments& args) {
     std::string value_str = std::string(*value);
     q->assign(value_str, name);
     }
-  else if (args[1]->IsArray())
-    {
-    v8::Handle<v8::Array> arr = v8::Handle<v8::Array>::Cast(args[1]); 
-    
-    int length=arr->Length();
-    std::vector<double> num_vec(length); 
-    
-    for (int i=0;i<length;i++) 
-      {
-      num_vec[i] = arr->Get(i)->NumberValue();
-      }
-    q->assign(num_vec, name);
-    }
-  else if (args[1]->IsObject()) 
+  else if (args[1]->IsArray() || args[1]->IsObject())
     {
     Handle<Object> object = Handle<Object>::Cast(args[1]); 
     

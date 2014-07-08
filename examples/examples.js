@@ -1,6 +1,6 @@
 var R = require('./build/Release/R');
 var util = require('util');
-var h = new R.session(); // 'world'
+var h = new R.session();
 
 h.parseEvalQ("cat('\n Hello World \n')");
 
@@ -24,21 +24,3 @@ var coefs = lm_fit.coefficients
 var residuals = lm_fit.residuals
 
 console.log(util.inspect(residuals))
-/*
-h.parseEvalQ("x = rnorm(10000)")
-
-h.parseEvalQ("print(X)")
-
-h.assign("Name","Philipp")
-
-h.parseEvalQ("sen = paste('My name is',Name,'!\n',sep=''); cat(sen);")
-// h.parseEvalQ("print(x[1:100])")
-
-a = [5,3]
-
-h.assign("array",a)
-
-h.parseEvalQ("print(array)")
-
-h.parseEvalQ("cat(doesNotExist))")
-*/
