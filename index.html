@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>node-rstats by Planeshifter</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>node-rstats</h1>
+        <p>An interface for node.js to statistical programming language R based on the fabulous Rcpp package</p>
+
+        <p class="view"><a href="https://github.com/Planeshifter/node-Rstats">View the Project on GitHub <small>Planeshifter/node-Rstats</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Planeshifter/node-Rstats/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Planeshifter/node-Rstats/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Planeshifter/node-Rstats">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p><a href="http://badge.fury.io/js/rstats"><img src="https://badge.fury.io/js/rstats.svg" alt="NPM version"></a></p>
+
+<h1>
+<a name="node-rstats" class="anchor" href="#node-rstats"><span class="octicon octicon-link"></span></a>node-Rstats</h1>
+
+<p>An interface for node.js to statistical programming language R based on the fabulous Rcpp package</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Currently, <code>rstats</code> is ONLY supported for Unix operating systems. </p>
+
+<p>Also, it is required that the R packages <code>RInside</code>, <code>Rcpp</code> and <code>RJSONIO</code> are installed inside R. Additionally, building the package using <code>node-gyp</code> requires</p>
+
+<ul>
+<li>
+<code>python</code> (<code>v2.7</code>, <code>v3.x.x</code> is <strong><em>not</em></strong> supported)</li>
+<li><code>make</code></li>
+<li>A C/C++ compiler toolchain, such as GCC</li>
+</ul><p>With these prerequisites satisfied, one can simply install <code>rstats</code> using npm </p>
+
+<div class="highlight highlight-bash"><pre>npm install rstats
+</pre></div>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>After installation, the package can be loaded as follows:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">rstats</span>  <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'rstats'</span><span class="p">);</span>
+</pre></div>
+
+<p>Once the package is loaded, we can create an R session by the command </p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">R</span>  <span class="o">=</span> <span class="k">new</span> <span class="nx">rstats</span><span class="p">.</span><span class="nx">session</span><span class="p">();</span> 
+</pre></div>
+
+<h2>
+<a name="important-functions" class="anchor" href="#important-functions"><span class="octicon octicon-link"></span></a>Important Functions</h2>
+
+<h3>
+<a name="parseevalq" class="anchor" href="#parseevalq"><span class="octicon octicon-link"></span></a>parseEvalQ</h3>
+
+<p>Evaluating R expressions is easy. We can use the <em>parseEvalQ</em> function as follows:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">R</span><span class="p">.</span><span class="nx">parseEvalQ</span><span class="p">(</span><span class="s2">"cat('\n Hello World \n')"</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="assign" class="anchor" href="#assign"><span class="octicon octicon-link"></span></a>assign</h3>
+
+<p>Numeric values can be easily assigned to variables in the current R session:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">R</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="mi">17</span><span class="p">);</span>
+<span class="nx">R</span><span class="p">.</span><span class="nx">assign</span><span class="p">(</span><span class="s1">'y'</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+
+<span class="c1">// calculate the sum of x+y and print the result</span>
+<span class="nx">R</span><span class="p">.</span><span class="nx">parseEvalQ</span><span class="p">(</span><span class="s2">"res = x + y; print(res);"</span><span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="get" class="anchor" href="#get"><span class="octicon octicon-link"></span></a>get</h3>
+
+<p>To retrieve an object from the R session, we use the <em>get</em> command. For example, let us create a 2x2 matrix in R and retrieve it in JavaScript as a nested array:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">R</span><span class="p">.</span><span class="nx">parseEvalQ</span><span class="p">(</span><span class="s2">"mat = matrix(1:4,ncol=2,nrow=2)"</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">mat</span> <span class="o">=</span> <span class="nx">R</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'mat'</span><span class="p">);</span>
+</pre></div>
+
+<p>Internally, the <em>get</em> function uses JSON in order to convert the R data types to JavaScript data types.</p>
+
+<p>We can also run much more complicated calculations and expose the R objects to JavaScript. Consider a linear regression example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">R</span><span class="p">.</span><span class="nx">parseEvalQ</span><span class="p">(</span><span class="s1">'x = rnorm(100); y = 4x + rnorm(100); lm_fit = lm(y~x);'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">lm_fit</span> <span class="o">=</span> <span class="nx">R</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'lm_fit'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">coefs</span> <span class="o">=</span> <span class="nx">lm_fit</span><span class="p">.</span><span class="nx">coefficients</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">residuals</span> <span class="o">=</span> <span class="nx">lm_fit</span><span class="p">.</span><span class="nx">residuals</span><span class="p">;</span>
+</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Planeshifter">Planeshifter</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
