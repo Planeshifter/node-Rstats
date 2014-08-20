@@ -33,6 +33,18 @@
 
           'cflags_cc!': ['-fno-rtti','-fno-exceptions'],
           'cflags_cc+': ['-frtti','-fno-exceptions'],
+          'conditions': [
+            ['OS=="mac"', {
+              'xcode_settings': {
+                "MACOSX_DEPLOYMENT_TARGET": "10.7",
+                "OTHER_CPLUSPLUSFLAGS": [
+                  "-stdlib=libc++"
+                ],
+                'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+                'GCC_ENABLE_CPP_RTTI': 'YES'
+              }
+            }]
+          ]
           }
   ]
 }
