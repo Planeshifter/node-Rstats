@@ -1,4 +1,4 @@
-var R = require('./build/Release/R');
+var R = require('../build/Release/R');
 var util = require('util');
 var h = new R.session();
 
@@ -24,3 +24,17 @@ var coefs = lm_fit.coefficients
 var residuals = lm_fit.residuals
 
 console.log(util.inspect(residuals))
+
+try{
+h.get("Z")
+} catch(e){
+ console.log(e);
+}
+
+try{
+h.parseEvalQ("argh")
+} catch(e) {
+	console.log(e);
+}
+
+h.parseEvalQ("print(2+3)");

@@ -1,1 +1,0 @@
-cmd_Release/obj.target/hello.node := flock ./Release/linker.lock g++ -shared -pthread -rdynamic -m64 -L/usr/lib/R/lib -lR  -Wl,-soname=hello.node -o Release/obj.target/hello.node -Wl,--start-group Release/obj.target/hello/hello.o -Wl,--end-group -L/usr/lib/R/lib -lR -L/home/philipp/R/RInside/lib -lRInside -Wl,-rpath,/home/philipp/R/RInside/lib

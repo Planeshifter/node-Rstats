@@ -69,7 +69,15 @@ Handle<Value> RWrap::parseEvalQ(const Arguments& args) {
   v8::String::Utf8Value param(args[0]->ToString());
   std::string command = std::string(*param);
   
-  q->parseEvalQ(command);
+  try {
+    q->parseEvalQ(command);
+  }
+  catch(std::exception& ex) {
+	std::string errorMessage(ex.what());
+	ThrowException(Exception::Error(String::New(errorMessage.c_str())));
+  } catch(...) {
+	ThrowException(Exception::Error(String::New("Unknown error encountered")));
+  }
   
   return scope.Close(Undefined());
 }
@@ -148,9 +156,13 @@ Handle<Value> RWrap::get(const Arguments& args) {
   Handle<Function> parse = Handle<Function>::Cast(
   JSON->Get(String::New("parse")));
   
-  std::string ret = q->parseEval(full_command);
-  Handle<Value> ret_V8 = String::New( ret.c_str() );
-  Handle<Value> result = Handle<String>::Cast(parse->Call(JSON, 1, &ret_V8));
-  
-  return scope.Close(result);
+  try{
+    std::string ret = q->parseEval(full_command);
+    Handle<Value> ret_V8 = String::New( ret.c_str() );
+    Handle<Value> result = Handle<String>::Cast(parse->Call(JSON, 1, &ret_V8));
+    return scope.Close(result);
+  } catch(...) {
+    ThrowException(Exception::ReferenceError(String::New("The requested variable could not be retrieved.")));
+    return scope.Close(Undefined());
+  }
 }
