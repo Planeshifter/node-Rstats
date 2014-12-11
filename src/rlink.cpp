@@ -32,6 +32,9 @@ void RWrap::Initialize(Handle<Object> target) {
   tpl->SetClassName(String::NewSymbol("session"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("parseEval"),
+    FunctionTemplate::New(parseEval)->GetFunction());
+
   tpl->PrototypeTemplate()->Set(String::NewSymbol("parseEvalQ"),
     FunctionTemplate::New(parseEvalQ)->GetFunction());
 
@@ -63,6 +66,39 @@ Handle<Value> RWrap::New(const Arguments& args) {
   w->Wrap(args.This());
 
   return args.This();
+}
+
+
+Handle<Value> RWrap::parseEval(const Arguments& args) {
+  HandleScope scope;
+
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
+  RInside* q = r->GetWrapped();
+
+  v8::String::Utf8Value param(args[0]->ToString());
+  std::string command = std::string(*param);
+  std::string wrapper_before = "toJSON({";
+  std::string wrapper_after = "});";
+  std::string full_command = wrapper_before + command + wrapper_after;
+
+  Handle<Object> global = Context::GetCurrent()->Global();
+  Handle<Object> JSON = Handle<Object>::Cast(global->Get(String::New("JSON")));
+  Handle<Function> parse = Handle<Function>::Cast(
+	  JSON->Get(String::New("parse")));
+
+  try {
+    std::string ret = q->parseEval(full_command);
+    Handle<Value> ret_V8 = String::New( ret.c_str() );
+    Handle<Value> result = Handle<String>::Cast(parse->Call(JSON, 1, &ret_V8));
+    return scope.Close(result);
+  } catch(std::exception& ex) {
+	std::string errorMessage(ex.what());
+	ThrowException(Exception::Error(String::New(errorMessage.c_str())));
+    return scope.Close(Undefined());
+  } catch(...) {
+	ThrowException(Exception::Error(String::New("Unknown error encountered")));
+    return scope.Close(Undefined());
+  }
 }
 
 Handle<Value> RWrap::parseEvalQ(const Arguments& args) {
