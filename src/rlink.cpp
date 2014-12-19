@@ -188,7 +188,7 @@ Handle<Value> RWrap::get(const Arguments& args) {
   v8::String::Utf8Value param(args[0]->ToString());
   std::string name = std::string(*param);
   std::string command_pt1 = "toJSON(";
-  std::string command_pt2 = ");";
+  std::string command_pt2 = ", digits=50);";
   std::string full_command = command_pt1 + name + command_pt2;
 
   Handle<Object> global = Context::GetCurrent()->Global();
