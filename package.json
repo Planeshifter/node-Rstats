@@ -1,6 +1,6 @@
 {
   "name": "rstats",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A node.js interface for statistical programming language R",
   "main": "./lib/index.js",
   "scripts": {
