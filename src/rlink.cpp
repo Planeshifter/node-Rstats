@@ -78,7 +78,7 @@ Handle<Value> RWrap::parseEval(const Arguments& args) {
   v8::String::Utf8Value param(args[0]->ToString());
   std::string command = std::string(*param);
   std::string wrapper_before = "toJSON({";
-  std::string wrapper_after = "});";
+  std::string wrapper_after = "}, digits = 50);";
   std::string full_command = wrapper_before + command + wrapper_after;
 
   Handle<Object> global = Context::GetCurrent()->Global();
