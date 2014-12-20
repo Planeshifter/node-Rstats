@@ -44,7 +44,15 @@ Evaluating R expressions is easy. We can use the *parseEvalQ* function as follow
 R.parseEvalQ("cat('\n Hello World \n')");
 ```
 
+### parseEval 
 
+To evaluate an R expression and directly capture its return value, one can use the *parseEval* function. 
+
+```javascript
+var x = R.parseEval("c(1,2,3)");
+```
+
+The variable `x` is now equal to the array `[1,2,3]`.
 
 ### assign
 
@@ -77,3 +85,4 @@ var lm_fit = R.get('lm_fit');
 var coefs = lm_fit.coefficients;
 var residuals = lm_fit.residuals;
 ```
+
