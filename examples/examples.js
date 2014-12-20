@@ -38,3 +38,10 @@ h.parseEvalQ("argh")
 }
 
 h.parseEvalQ("print(2+3)");
+
+
+// test for RJSONIO toJSON precision issue
+h.parseEvalQ("json = toJSON(1234687.796545568, digits=Inf)")
+json  = h.get('json')
+json = JSON.parse(json)
+console.log(json)
