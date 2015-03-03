@@ -7,7 +7,7 @@ An interface for node.js to statistical programming language R based on the fabu
 
 ## Installation
 
-Currently, `rstats` is ONLY supported for Unix operating systems. 
+Currently, `rstats` is ONLY supported for Unix operating systems.
 
 Also, it is required that the R packages `RInside`, `Rcpp` and `RJSONIO` are installed inside R. Additionally, building the package using `node-gyp` requires
 
@@ -15,7 +15,7 @@ Also, it is required that the R packages `RInside`, `Rcpp` and `RJSONIO` are ins
   * `make`
   * A C/C++ compiler toolchain, such as GCC
 
-With these prerequisites satisfied, one can simply install `rstats` using npm 
+With these prerequisites satisfied, one can simply install `rstats` using npm
 
 ```bash
 npm install rstats
@@ -29,10 +29,10 @@ After installation, the package can be loaded as follows:
 var rstats  = require('rstats');
 ```
 
-Once the package is loaded, we can create an R session by the command 
+Once the package is loaded, we can create an R session by the command
 
 ```javascript
-var R  = new rstats.session(); 
+var R  = new rstats.session();
 ```
 ## Important Functions
 
@@ -44,9 +44,9 @@ Evaluating R expressions is easy. We can use the *parseEvalQ* function as follow
 R.parseEvalQ("cat('\n Hello World \n')");
 ```
 
-### parseEval 
+### parseEval
 
-To evaluate an R expression and directly capture its return value, one can use the *parseEval* function. 
+To evaluate an R expression and directly capture its return value, one can use the *parseEval* function.
 
 ```javascript
 var x = R.parseEval("c(1,2,3)");
@@ -86,3 +86,13 @@ var coefs = lm_fit.coefficients;
 var residuals = lm_fit.residuals;
 ```
 
+## License
+
+MIT
+
+[npm-url]: https://npmjs.org/package/rstats
+[npm-image]: https://badge.fury.io/js/rstats.svg
+[travis-url]: https://travis-ci.org/Planeshifter/node-Rstats
+[travis-image]: https://travis-ci.org/Planeshifter/node-Rstats.svg?branch=master
+[daviddm-url]: https://david-dm.org/Planeshifter/node-Rstats.svg?theme=shields.io
+[daviddm-image]: https://david-dm.org/Planeshifter/node-Rstats

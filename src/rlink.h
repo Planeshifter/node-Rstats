@@ -2,23 +2,24 @@
 #define RLINK_H
 
 #include <node.h>
+#include <nan.h>
 #include <RInside.h>                    // for the embedded R via RInside
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 class RWrap : public node::ObjectWrap {
-  
-  public:  
+
+  public:
     static void Initialize(v8::Handle<v8::Object> target);
     RInside* GetWrapped() const { return q_; };
     void SetWrapped(RInside q) {
       if (q_) delete q_;
       q_ = new RInside(q);
       };
-      
+
         static v8::Handle<v8::Value> NewInstance(RInside q);
-    
+
   private:
      RWrap(const v8::Arguments& args);
     ~RWrap();
@@ -31,7 +32,7 @@ class RWrap : public node::ObjectWrap {
   static v8::Handle<v8::Value> parseEvalQNT(const v8::Arguments& args);
   static v8::Handle<v8::Value> assign(const v8::Arguments& args);
   static v8::Handle<v8::Value> get(const v8::Arguments& args);
-    
+
   // Wrapped object
      RInside* q_;
 };

@@ -15,7 +15,7 @@
               'RCPPINCL%' : '<!(echo "Rcpp:::CxxFlags()" | <(R_HOME%)/bin/R --vanilla --slave | sed "s/^...//")',
               'RCPPLIBS%' : '<!(echo "Rcpp:::LdFlags()" | <(R_HOME%)/bin/R --vanilla --slave)',
               },
-      "link_settings": 
+      "link_settings":
             {
               'ldflags': ['<(RLDFLAGS)'],
               'libraries': ['<(RLDFLAGS)',
@@ -26,10 +26,11 @@
                             ]
             },
           'include_dirs': [
+              "<!(node -e \"require('nan')\")",
               '/<(RINSIDEINCL)',
               '/<(RCPPINCL)',
               '/<(RCPPFLAGS)',
-                          ], 
+                          ],
 
           'cflags_cc!': ['-fno-rtti','-fno-exceptions'],
           'cflags_cc+': ['-frtti','-fno-exceptions'],

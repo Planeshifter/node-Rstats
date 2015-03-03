@@ -1,5 +1,6 @@
 #define BUILDING_NODE_EXTENSION
 #include <node.h>
+#include <nan.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>
