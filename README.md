@@ -85,10 +85,6 @@ var coefs = lm_fit.coefficients;
 var residuals = lm_fit.residuals;
 ```
 
-## License
-
-MIT
-
 [npm-url]: https://npmjs.org/package/rstats
 [npm-image]: https://badge.fury.io/js/rstats.svg
 [travis-url]: https://travis-ci.org/Planeshifter/node-Rstats
