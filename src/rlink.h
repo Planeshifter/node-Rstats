@@ -21,20 +21,20 @@ class RWrap : public node::ObjectWrap {
         static v8::Handle<v8::Value> NewInstance(RInside q);
 
   private:
-     RWrap(const v8::Arguments& args);
+     RWrap();
     ~RWrap();
     static v8::Persistent<v8::Function> constructor;
-    static v8::Handle<v8::Value> New(const v8::Arguments& args);
+    static NAN_METHOD(New);
 
-  // Wrapped methods
-  static v8::Handle<v8::Value> parseEval(const v8::Arguments& args);
-  static v8::Handle<v8::Value> parseEvalQ(const v8::Arguments& args);
-  static v8::Handle<v8::Value> parseEvalQNT(const v8::Arguments& args);
-  static v8::Handle<v8::Value> assign(const v8::Arguments& args);
-  static v8::Handle<v8::Value> get(const v8::Arguments& args);
+    // Wrapped methods
+    static NAN_METHOD(parseEval);
+    static NAN_METHOD(parseEvalQ);
+    static NAN_METHOD(parseEvalQNT);
+    static NAN_METHOD(assign);
+    static NAN_METHOD(get);
 
-  // Wrapped object
-     RInside* q_;
+    // Wrapped object
+    RInside* q_;
 };
 
 
