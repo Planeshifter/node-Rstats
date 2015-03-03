@@ -1,5 +1,4 @@
-[![NPM version](https://badge.fury.io/js/rstats.svg)](http://badge.fury.io/js/rstats)
-
+#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
 node-Rstats
 ===========
 
