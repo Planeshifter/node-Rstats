@@ -4,7 +4,7 @@
   "description": "A node.js interface for statistical programming language R",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "node-gyp configure build && nodeunit test",
+    "test": "node-gyp configure build && mocha test",
     "install": "node-gyp rebuild"
   },
   "dependencies": {
@@ -26,5 +26,9 @@
   "bugs": {
     "url": "https://github.com/Planeshifter/node-Rstats/issues"
   },
-  "homepage": "https://github.com/Planeshifter/node-Rstats"
+  "homepage": "https://github.com/Planeshifter/node-Rstats",
+  "devDependencies": {
+    "chai": "^2.1.2",
+    "mocha": "^2.2.1"
+  }
 }

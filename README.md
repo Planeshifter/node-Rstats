@@ -1,8 +1,12 @@
-#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
+[![Dependencies][dependencies-image]][dependencies-url]
+
 node-Rstats
 ===========
 
-An interface for node.js to statistical programming language R based on the fabulous Rcpp package
+> An interface for node.js to statistical programming language R based on the fabulous Rcpp package
 
 ## Installation
 
@@ -91,3 +95,24 @@ var residuals = lm_fit.residuals;
 [travis-image]: https://travis-ci.org/Planeshifter/node-Rstats.svg?branch=master
 [daviddm-url]: https://david-dm.org/Planeshifter/node-Rstats.svg?theme=shields.io
 [daviddm-image]: https://david-dm.org/Planeshifter/node-Rstats
+
+## Unit Tests
+
+Run tests via the command `npm test`
+
+---
+## License
+
+[GPL v2](http://www.gnu.org/licenses/gpl-2.0-standalone.html).
+
+[npm-image]: https://badge.fury.io/js/text-miner.svg
+[npm-url]: http://badge.fury.io/js/text-miner
+
+[travis-image]: https://travis-ci.org/Planeshifter/text-miner.svg
+[travis-url]: https://travis-ci.org/Planeshifter/text-miner
+
+[coveralls-image]: https://img.shields.io/coveralls/Planeshifter/text-miner/master.svg
+[coveralls-url]: https://coveralls.io/r/Planeshifter/text-miner?branch=master
+
+[dependencies-image]: http://img.shields.io/david/Planeshifter/text-miner.svg
+[dependencies-url]: https://david-dm.org/Planeshifter/text-miner
