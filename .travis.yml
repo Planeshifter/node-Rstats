@@ -7,5 +7,7 @@ node_js:
 before_install:
   - sudo apt-get install r-base
   - sudo apt-get install r-cran-rcpp
-  - wget http://cran.r-project.org/src/contrib/RInside_0.2.11.tar.gz
-  - sudo R CMD INSTALL RInside_0.2.11.tar.gz
+  - wget http://cran.r-project.org/src/contrib/RInside_0.2.12.tar.gz
+  - sudo R CMD INSTALL RInside_0.2.12.tar.gz
+  - wget http://cran.r-project.org/src/contrib/RJSONIO_1.3-0.tar.gz
+  - sudo R CMD INSTALL RJSONIO_1.3-0.tar.gz
