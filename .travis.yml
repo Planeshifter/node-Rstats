@@ -11,3 +11,6 @@ before_install:
   - sudo R CMD INSTALL RInside_0.2.10.tar.gz
   - wget http://cran.r-project.org/src/contrib/RJSONIO_1.3-0.tar.gz
   - sudo R CMD INSTALL RJSONIO_1.3-0.tar.gz
+  - npm update -g npm
+after_script:
+  - npm run coveralls
