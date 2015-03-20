@@ -105,14 +105,14 @@ Run tests via the command `npm test`
 
 [GPL v2](http://www.gnu.org/licenses/gpl-2.0-standalone.html).
 
-[npm-image]: https://badge.fury.io/js/text-miner.svg
-[npm-url]: http://badge.fury.io/js/text-miner
+[npm-image]: https://badge.fury.io/js/rstats.svg
+[npm-url]: http://badge.fury.io/js/rstats
 
-[travis-image]: https://travis-ci.org/Planeshifter/text-miner.svg
-[travis-url]: https://travis-ci.org/Planeshifter/text-miner
+[travis-image]: https://travis-ci.org/Planeshifter/node-Rstats.svg
+[travis-url]: https://travis-ci.org/Planeshifter/node-Rstats
 
-[coveralls-image]: https://img.shields.io/coveralls/Planeshifter/text-miner/master.svg
-[coveralls-url]: https://coveralls.io/r/Planeshifter/text-miner?branch=master
+[coveralls-image]: https://img.shields.io/coveralls/Planeshifter/node-Rstats/master.svg
+[coveralls-url]: https://coveralls.io/r/Planeshifter/node-Rstats?branch=master
 
-[dependencies-image]: http://img.shields.io/david/Planeshifter/text-miner.svg
-[dependencies-url]: https://david-dm.org/Planeshifter/text-miner
+[dependencies-image]: http://img.shields.io/david/Planeshifter/node-Rstats.svg
+[dependencies-url]: https://david-dm.org/Planeshifter/node-Rstats

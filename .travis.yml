@@ -6,4 +6,6 @@ node_js:
   - 'iojs'
 before_install:
   - sudo apt-get install r-base
-  - Rscript install_dependencies.R
+  - sudo apt-get install r-cran-rcpp
+  - wget http://cran.r-project.org/src/contrib/RInside_0.2.11.tar.gz
+  - sudo R CMD INSTALL RInside_0.2.11.tar.gz
