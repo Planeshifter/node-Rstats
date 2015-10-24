@@ -23,7 +23,7 @@ class RWrap : public node::ObjectWrap {
   private:
      RWrap();
     ~RWrap();
-    static v8::Persistent<v8::Function> constructor;
+    static Nan::Persistent<v8::FunctionTemplate> constructor_template;
     static NAN_METHOD(New);
 
     // Wrapped methods
