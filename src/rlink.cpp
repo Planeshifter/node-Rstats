@@ -18,12 +18,38 @@ Nan::Persistent<FunctionTemplate> RWrap::constructor_template;
 
 RWrap::RWrap() : q_(NULL) {
   q_ = new RInside();
+  callbacks_ = new RWrapCallbacks(this);
+  q_->set_callbacks(callbacks_);
 }
 
 RWrap::~RWrap() {
   delete q_;
+  delete callbacks_;
 }
 
+void RWrapCallbacks::WriteConsole(const std::string& line, int type)
+{
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Local<Value> args[1] = { String::NewFromUtf8(v8::Isolate::GetCurrent(), line.c_str() ) };
+  Local<Function> cb = Nan::New(_parent->cb_WriteConsole);
+  Nan::MakeCallback(global, cb, 1, args);
+}
+
+void RWrapCallbacks::ShowMessage(const char* message)
+{
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Local<Value> args[1] = { String::NewFromUtf8(v8::Isolate::GetCurrent(), message ) };
+  Local<Function> cb = Nan::New(_parent->cb_ShowMessage);
+  Nan::MakeCallback(global, cb, 1, args);
+}
+
+void RWrapCallbacks::Suicide(const char* message)
+{
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Local<Value> args[1] = { String::NewFromUtf8(v8::Isolate::GetCurrent(), message ) };
+  Local<Function> cb = Nan::New(_parent->cb_Suicide);
+  Nan::MakeCallback(global, cb, 1, args);
+}
 
 NAN_MODULE_INIT(RWrap::Initialize) {
   Nan::HandleScope scope;
@@ -34,6 +60,9 @@ NAN_MODULE_INIT(RWrap::Initialize) {
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
   // Prototype
+  Nan::SetPrototypeMethod(tpl, "setCallbackShowMessage", setCallbackShowMessage);
+  Nan::SetPrototypeMethod(tpl, "setCallbackSuicide", setCallbackSuicide);
+  Nan::SetPrototypeMethod(tpl, "setCallbackWriteConsole", setCallbackWriteConsole);
   Nan::SetPrototypeMethod(tpl, "parseEval", parseEval);
   Nan::SetPrototypeMethod(tpl, "parseEvalQ", parseEvalQ);
   Nan::SetPrototypeMethod(tpl, "parseEvalQNT", parseEvalQNT);
@@ -42,6 +71,36 @@ NAN_MODULE_INIT(RWrap::Initialize) {
 
   constructor_template.Reset(tpl);
   Nan::Set(target, Nan::New("session").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+}
+
+
+void RWrap::setCallbackShowMessage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
+
+  Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
+  r->cb_ShowMessage.Reset(callbackHandle);
+  
+  info.GetReturnValue().SetUndefined();
+}
+
+
+void RWrap::setCallbackSuicide(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
+
+  Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
+  r->cb_Suicide.Reset(callbackHandle);
+  
+  info.GetReturnValue().SetUndefined();
+}
+
+
+void RWrap::setCallbackWriteConsole(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
+
+  Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
+  r->cb_WriteConsole.Reset(callbackHandle);
+  
+  info.GetReturnValue().SetUndefined();
 }
 
 
