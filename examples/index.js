@@ -2,6 +2,8 @@ var R = require('../build/Release/R');
 var util = require('util');
 var h = new R.session();
 
+var result = h.parseEval("fisher.test(matrix(c(0,96,0,825), nrow = 2))");
+
 h.parseEvalQ("cat('\n Hello World \n')");
 
 h.assign('X', 2483);

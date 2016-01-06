@@ -1,17 +1,16 @@
 language: node_js
 addons:
   apt:
+    sources:
+    - r-packages-precise
     packages:
     - r-base
     - r-cran-rcpp
+    - r-cran-rjsonio
+    - r-cran-rinside
 node_js:
   - 'stable'
   - '5'
   - '4'
-before_install:
-  - wget http://cran.r-project.org/src/contrib/Archive/RInside/RInside_0.2.10.tar.gz
-  - R CMD INSTALL RInside_0.2.10.tar.gz
-  - wget http://cran.r-project.org/src/contrib/RJSONIO_1.3-0.tar.gz
-  - R CMD INSTALL RJSONIO_1.3-0.tar.gz
 after_script:
   - npm run coveralls
