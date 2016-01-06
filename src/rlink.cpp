@@ -14,93 +14,144 @@
 using namespace v8;
 using namespace std;
 
-Persistent<Function> RWrap::constructor;
+Nan::Persistent<FunctionTemplate> RWrap::constructor_template;
 
 RWrap::RWrap() : q_(NULL) {
   q_ = new RInside();
+  callbacks_ = new RWrapCallbacks(this);
+  q_->set_callbacks(callbacks_);
 }
 
 RWrap::~RWrap() {
   delete q_;
+  delete callbacks_;
 }
 
+void RWrapCallbacks::WriteConsole(const std::string& line, int type)
+{
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Local<Value> args[1] = { String::NewFromUtf8(v8::Isolate::GetCurrent(), line.c_str() ) };
+  Local<Function> cb = Nan::New(_parent->cb_WriteConsole);
+  Nan::MakeCallback(global, cb, 1, args);
+}
 
-void RWrap::Initialize(Handle<Object> target) {
-  NanScope();
+void RWrapCallbacks::ShowMessage(const char* message)
+{
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Local<Value> args[1] = { String::NewFromUtf8(v8::Isolate::GetCurrent(), message ) };
+  Local<Function> cb = Nan::New(_parent->cb_ShowMessage);
+  Nan::MakeCallback(global, cb, 1, args);
+}
+
+void RWrapCallbacks::Suicide(const char* message)
+{
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Local<Value> args[1] = { String::NewFromUtf8(v8::Isolate::GetCurrent(), message ) };
+  Local<Function> cb = Nan::New(_parent->cb_Suicide);
+  Nan::MakeCallback(global, cb, 1, args);
+}
+
+NAN_MODULE_INIT(RWrap::Initialize) {
+  Nan::HandleScope scope;
 
    // Prepare constructor template
-  Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
-  tpl->SetClassName(NanNew("session"));
+  Local<FunctionTemplate> tpl = Nan::New<FunctionTemplate>(New);
+  tpl->SetClassName(Nan::New("session").ToLocalChecked());
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
   // Prototype
-  NODE_SET_PROTOTYPE_METHOD(tpl, "parseEval", parseEval);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "parseEvalQ", parseEvalQ);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "parseEvalQNT", parseEvalQNT);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "assign", assign);
-  NODE_SET_PROTOTYPE_METHOD(tpl, "get", get);
+  Nan::SetPrototypeMethod(tpl, "setCallbackShowMessage", setCallbackShowMessage);
+  Nan::SetPrototypeMethod(tpl, "setCallbackSuicide", setCallbackSuicide);
+  Nan::SetPrototypeMethod(tpl, "setCallbackWriteConsole", setCallbackWriteConsole);
+  Nan::SetPrototypeMethod(tpl, "parseEval", parseEval);
+  Nan::SetPrototypeMethod(tpl, "parseEvalQ", parseEvalQ);
+  Nan::SetPrototypeMethod(tpl, "parseEvalQNT", parseEvalQNT);
+  Nan::SetPrototypeMethod(tpl, "assign", assign);
+  Nan::SetPrototypeMethod(tpl, "get", get);
 
-  NanAssignPersistent(constructor, tpl->GetFunction());
-  target->Set(NanNew("session"), tpl->GetFunction());
-
+  constructor_template.Reset(tpl);
+  Nan::Set(target, Nan::New("session").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
 }
 
 
-NAN_METHOD(RWrap::New) {
-  NanScope();
+void RWrap::setCallbackShowMessage(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
 
+  Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
+  r->cb_ShowMessage.Reset(callbackHandle);
+  
+  info.GetReturnValue().SetUndefined();
+}
+
+
+void RWrap::setCallbackSuicide(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
+
+  Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
+  r->cb_Suicide.Reset(callbackHandle);
+  
+  info.GetReturnValue().SetUndefined();
+}
+
+
+void RWrap::setCallbackWriteConsole(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
+
+  Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
+  r->cb_WriteConsole.Reset(callbackHandle);
+  
+  info.GetReturnValue().SetUndefined();
+}
+
+
+void RWrap::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
   RWrap* w = new RWrap();
 
   RInside* q = w->GetWrapped();
   std::string load_command = "library(RJSONIO, quietly=TRUE);";
   q->parseEvalQ(load_command);
 
-  w->Wrap(args.This());
-
-  NanReturnValue(args.This());
+  w->Wrap(info.This());
+  info.GetReturnValue().Set(info.This());
 }
 
 
-NAN_METHOD(RWrap::parseEval) {
-  NanScope();
-
-  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
+void RWrap::parseEval(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
   RInside* q = r->GetWrapped();
 
-  v8::String::Utf8Value param(args[0]->ToString());
+  v8::String::Utf8Value param(info[0]->ToString());
   std::string command = std::string(*param);
   std::string wrapper_before = "toJSON({";
   std::string wrapper_after = "}, digits = 50);";
   std::string full_command = wrapper_before + command + wrapper_after;
 
-  Handle<Object> global = NanGetCurrentContext()->Global();
-  Handle<Object> JSON = Handle<Object>::Cast(global->Get(NanNew("JSON")));
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Handle<Object> JSON = Handle<Object>::Cast(Nan::Get(global, Nan::New("JSON").ToLocalChecked()).ToLocalChecked());
   Handle<Function> parse = Handle<Function>::Cast(
-	  JSON->Get(NanNew("parse"))
+	  Nan::Get(JSON, Nan::New("parse").ToLocalChecked()).ToLocalChecked()
   );
 
   try {
     std::string ret = q->parseEval(full_command);
-    Handle<Value> ret_V8 = NanNew( ret.c_str() );
+    Handle<Value> ret_V8 = Nan::New( ret.c_str() ).ToLocalChecked();
     Handle<Value> result = Handle<String>::Cast(parse->Call(JSON, 1, &ret_V8));
-    NanReturnValue(result);
+    info.GetReturnValue().Set(result);
   } catch(std::exception& ex) {
 	  std::string errorMessage(ex.what());
-    NanThrowTypeError( errorMessage.c_str() );
-    NanReturnUndefined();
+    Nan::ThrowTypeError( errorMessage.c_str() );
+    info.GetReturnValue().Set(Nan::Undefined());
   } catch(...) {
-    NanThrowTypeError("Unknown error encountered");
-    NanReturnUndefined();
+    Nan::ThrowTypeError("Unknown error encountered");
+    info.GetReturnValue().Set(Nan::Undefined());
   }
 }
 
-NAN_METHOD(RWrap::parseEvalQ) {
-  NanScope();
-
-  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
+void RWrap::parseEvalQ(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
   RInside* q = r->GetWrapped();
 
-  v8::String::Utf8Value param(args[0]->ToString());
+  v8::String::Utf8Value param(info[0]->ToString());
   std::string command = std::string(*param);
 
   try {
@@ -108,52 +159,48 @@ NAN_METHOD(RWrap::parseEvalQ) {
   }
   catch(std::exception& ex) {
 	  std::string errorMessage(ex.what());
-    NanThrowTypeError( errorMessage.c_str() );
+    Nan::ThrowTypeError( errorMessage.c_str() );
   } catch(...) {
-    NanThrowTypeError("Unknown error encountered");
+    Nan::ThrowTypeError("Unknown error encountered");
   }
 
-  NanReturnUndefined();
+  info.GetReturnValue().Set(Nan::Undefined());
 }
 
-NAN_METHOD(RWrap::parseEvalQNT) {
-  NanScope();
-
-  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
+void RWrap::parseEvalQNT(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
   RInside* q = r->GetWrapped();
 
-  v8::String::Utf8Value param(args[0]->ToString());
+  v8::String::Utf8Value param(info[0]->ToString());
   std::string command = std::string(*param);
 
   q->parseEvalQNT(command);
 
-  NanReturnUndefined();
+  info.GetReturnValue().Set(Nan::Undefined());
 }
 
-NAN_METHOD(RWrap::assign) {
-  NanScope();
-
-  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.This());
+void RWrap::assign(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.This());
   RInside* q = r->GetWrapped();
-  v8::String::Utf8Value param1(args[0]->ToString());
+  v8::String::Utf8Value param1(info[0]->ToString());
   std::string name = std::string(*param1);
 
-  if ( args[1]->IsNumber() ) {
-    double value = args[1]->NumberValue();
+  if ( info[1]->IsNumber() ) {
+    double value = info[1]->NumberValue();
     q->assign(value, name);
   }
-  else if ( args[1]->IsString() ) {
-    v8::String::Utf8Value value(args[1]->ToString());
+  else if ( info[1]->IsString() ) {
+    v8::String::Utf8Value value(info[1]->ToString());
     std::string value_str = std::string(*value);
     q->assign(value_str, name);
   }
-  else if ( args[1]->IsArray() || args[1]->IsObject() ) {
-    Handle<Object> object = Handle<Object>::Cast(args[1]);
+  else if ( info[1]->IsArray() || info[1]->IsObject() ) {
+    Handle<Object> object = Handle<Object>::Cast(info[1]);
 
-    Handle<Object> global = NanGetCurrentContext()->Global();
-    Handle<Object> JSON = Handle<Object>::Cast(global->Get(NanNew("JSON")));
+    Handle<Object> global = Nan::GetCurrentContext()->Global();
+    Handle<Object> JSON = Handle<Object>::Cast(Nan::Get(global, Nan::New("JSON").ToLocalChecked()).ToLocalChecked());
     Handle<Function> stringify = Handle<Function>::Cast(
-    JSON->Get(NanNew("stringify")));
+    Nan::Get(JSON, Nan::New("stringify").ToLocalChecked()).ToLocalChecked());
 
     Handle<Value> stringifyable[] = { object };
     Handle<String> result = Handle<String>::Cast(stringify->Call(JSON, 1, stringifyable));
@@ -165,33 +212,31 @@ NAN_METHOD(RWrap::assign) {
     std::string full_command = name + command_pt2;
     q->parseEvalQ(full_command);
   }
-  NanReturnUndefined();
+  info.GetReturnValue().Set(Nan::Undefined());
 }
 
-NAN_METHOD(RWrap::get) {
-  NanScope();
-
-  RWrap* r = ObjectWrap::Unwrap<RWrap>(args.Holder());
+void RWrap::get(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  RWrap* r = ObjectWrap::Unwrap<RWrap>(info.Holder());
   RInside* q = r->GetWrapped();
 
-  v8::String::Utf8Value param(args[0]->ToString());
+  v8::String::Utf8Value param(info[0]->ToString());
   std::string name = std::string(*param);
   std::string command_pt1 = "toJSON(";
   std::string command_pt2 = ", digits=50);";
   std::string full_command = command_pt1 + name + command_pt2;
 
-  Handle<Object> global = NanGetCurrentContext()->Global();
-  Handle<Object> JSON = Handle<Object>::Cast(global->Get(NanNew("JSON")));
+  Handle<Object> global = Nan::GetCurrentContext()->Global();
+  Handle<Object> JSON = Handle<Object>::Cast(Nan::Get(global, Nan::New("JSON").ToLocalChecked()).ToLocalChecked());
   Handle<Function> parse = Handle<Function>::Cast(
-  JSON->Get(NanNew("parse")));
+  Nan::Get(JSON, Nan::New("parse").ToLocalChecked()).ToLocalChecked());
 
   try{
     std::string ret = q->parseEval(full_command);
-    Handle<Value> ret_V8 = NanNew( ret.c_str() );
+    Handle<Value> ret_V8 = Nan::New( ret.c_str() ).ToLocalChecked();
     Handle<Value> result = Handle<String>::Cast(parse->Call(JSON, 1, &ret_V8));
-    NanReturnValue(result);
+    info.GetReturnValue().Set(result);
   } catch(...) {
-    NanThrowTypeError("The requested variable could not be retrieved.");
-    NanReturnUndefined();
+    Nan::ThrowTypeError("The requested variable could not be retrieved.");
+    info.GetReturnValue().Set(Nan::Undefined());
   }
 }
