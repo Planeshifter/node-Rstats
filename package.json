@@ -23,7 +23,7 @@
     "Rcpp"
   ],
   "author": "Philipp Burckhardt",
-  "license": "GPL-2",
+  "license": "GPL-2.0",
   "gypfile": true,
   "bugs": {
     "url": "https://github.com/Planeshifter/node-Rstats/issues"
