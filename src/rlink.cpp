@@ -79,7 +79,7 @@ void RWrap::setCallbackShowMessage(const Nan::FunctionCallbackInfo<v8::Value>& i
 
   Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
   r->cb_ShowMessage.Reset(callbackHandle);
-  
+
   info.GetReturnValue().SetUndefined();
 }
 
@@ -89,7 +89,7 @@ void RWrap::setCallbackSuicide(const Nan::FunctionCallbackInfo<v8::Value>& info)
 
   Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
   r->cb_Suicide.Reset(callbackHandle);
-  
+
   info.GetReturnValue().SetUndefined();
 }
 
@@ -99,7 +99,7 @@ void RWrap::setCallbackWriteConsole(const Nan::FunctionCallbackInfo<v8::Value>& 
 
   Local<Function> callbackHandle = Local<Function>::Cast(info[0]);
   r->cb_WriteConsole.Reset(callbackHandle);
-  
+
   info.GetReturnValue().SetUndefined();
 }
 
@@ -108,7 +108,7 @@ void RWrap::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
   RWrap* w = new RWrap();
 
   RInside* q = w->GetWrapped();
-  std::string load_command = "library(RJSONIO, quietly=TRUE);";
+  std::string load_command = "library(rjson, quietly=TRUE);";
   q->parseEvalQ(load_command);
 
   w->Wrap(info.This());
