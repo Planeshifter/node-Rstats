@@ -2,7 +2,9 @@ language: node_js
 addons:
   apt:
     sources:
+    - debian-sid
     - r-packages-precise
+    - r-packages-trusty
     packages:
     - r-base
     - r-cran-rcpp
